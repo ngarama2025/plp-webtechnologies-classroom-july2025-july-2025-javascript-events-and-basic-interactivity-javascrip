@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Web Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .dark-mode {
+            background-color: #222;
+            color: white;
+        }
+        
+        h1, h2 {
+            color: #333;
+        }
+        
+        .dark-mode h1, .dark-mode h2 {
+            color: #ddd;
+        }
+        
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        .counter {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .counter-value {
+            font-size: 24px;
+            margin: 0 15px;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .faq-item {
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .faq-question {
+            padding: 10px;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .dark-mode .faq-question {
+            background-color: #333;
+        }
+        
+        .faq-answer {
+            padding: 10px;
+            display: none;
+        }
+        
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .dark-mode form {
+            background-color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .success {
+            color: green;
+            margin-top: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Interactive Web Page</h1>
+    
+    <div>
+        <button id="theme-toggle">Toggle Dark Mode</button>
+    </div>
+    
+    <h2>Counter</h2>
+    <div class="counter">
+        <button id="decrement">-</button>
+        <div id="counter-value" class="counter-value">0</div>
+        <button id="increment">+</button>
+    </div>
+    
+    <h2>FAQ Section</h2>
+    <div class="faq">
+        <div class="faq-item">
+            <div class="faq-question">
+                What is JavaScript? <span>+</span>
+            </div>
+            <div class="faq-answer">
+                JavaScript is a programming language used to make web pages interactive.
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">
+                What is an event listener? <span>+</span>
+            </div>
+            <div class="faq-answer">
+                An event listener is a function that waits for a specific event to occur on a page element.
+            </div>
+        </div>
+    </div>
+    
+    <h2>Contact Form</h2>
+    <form id="contact-form">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" required>
+            <div class="error" id="name-error">Please enter your name</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" required>
+            <div class="error" id="email-error">Please enter a valid email</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" required>
+            <div class="error" id="password-error">Password must be at least 6 characters</div>
+        </div>
+        
+        <button type="submit">Submit</button>
+        <div class="success" id="success-message">Form submitted successfully!</div>
+    </form>
+
+    <script>
+        // Dark mode toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        themeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+        });
+        
+        // Counter functionality
+        const decrementBtn = document.getElementById('decrement');
+        const incrementBtn = document.getElementById('increment');
+        const counterValue = document.getElementById('counter-value');
+        let count = 0;
+        
+        decrementBtn.addEventListener('click', function() {
+            count--;
+            counterValue.textContent = count;
+        });
+        
+        incrementBtn.addEventListener('click', function() {
+            count++;
+            counterValue.textContent = count;
+        });
+        
+        // FAQ functionality
+        const faqQuestions = document.querySelectorAll('.faq-question');
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', function() {
+                const answer = this.nextElementSibling;
+                const isOpen = answer.style.display === 'block';
+                
+                // Close all answers
+                document.querySelectorAll('.faq-answer').forEach(ans => {
+                    ans.style.display = 'none';
+                });
+                
+                document.querySelectorAll('.faq-question span').forEach(span => {
+                    span.textContent = '+';
+                });
+                
+                // Open clicked answer if it was closed
+                if (!isOpen) {
+                    answer.style.display = 'block';
+                    this.querySelector('span').textContent = '-';
+                }
+            });
+        });
+        
+        // Form validation
+        const form = document.getElementById('contact-form');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const nameError = document.getElementById('name-error');
+        const emailError = document.getElementById('email-error');
+        const passwordError = document.getElementById('password-error');
+        const successMessage = document.getElementById('success-message');
+        
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            let isValid = true;
+            
+            // Reset errors
+            nameError.style.display = 'none';
+            emailError.style.display = 'none';
+            passwordError.style.display = 'none';
+            successMessage.style.display = 'none';
+            
+            // Validate name
+            if (nameInput.value.trim() === '') {
+                nameError.style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate email
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(emailInput.value)) {
+                emailError.style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate password
+            if (passwordInput.value.length < 6) {
+                passwordError.style.display = 'block';
+                isValid = false;
+            }
+            
+            // If form is valid
+            if (isValid) {
+                successMessage.style.display = 'block';
+                form.reset();
+            }
+        });
+        
+        // Real-time validation
+        nameInput.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                nameError.style.display = 'none';
+            }
+        });
+        
+        emailInput.addEventListener('input', function() {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailPattern.test(this.value)) {
+                emailError.style.display = 'none';
+            }
+        });
+        
+        passwordInput.addEventListener('input', function() {
+            if (this.value.length >= 6) {
+                passwordError.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
